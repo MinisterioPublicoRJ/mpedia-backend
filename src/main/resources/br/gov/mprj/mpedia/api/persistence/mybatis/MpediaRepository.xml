@@ -1,0 +1,12 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="br.gov.mprj.mpedia.api.persistence.mybatis.MpediaRepository">
+
+    <select id="areas" resultType="br.gov.mprj.mpedia.domain.dao.AreasDAO" >
+        SELECT * FROM datapedia.areas
+    </select>
+
+    <select id="temas" resultType="br.gov.mprj.mpedia.domain.dao.TemasDAO" >
+        SELECT * FROM datapedia.temas
+    </select>
+
+</mapper>
