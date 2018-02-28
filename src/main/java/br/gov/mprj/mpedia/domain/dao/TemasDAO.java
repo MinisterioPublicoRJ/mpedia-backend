@@ -3,76 +3,71 @@ package br.gov.mprj.mpedia.domain.dao;
 
 public class TemasDAO {
 
-    String areamãe ="";
-    String descartado = "";
-    String númeronalista = "";
-    String nomenalista = "";
-    String areascorelatas = "";
-    String fontedosdados = "";
-    String nometabelapgadmin = "";
-    String nomeplanilhadrive = "";
-    String títulosugerido = "";
-    String subtítulo = "";
-    String descrição = "";
-    String observação = "";
-    String urlparatableau = "";
-    String nomefinalparacaixa = "";
+    String id = "";
+    String titulo = "";
+    String endpoint = "";
+    String area_mae_id = "";
+    String area_mae_nome ="";
+    String cor = "";
+    String icone = "";
+    String areas_correlatas = "";
+    String subtitulo = "";
+    String descricao = "";
+    String fonte = "";
+    String observacao = "";
+    String url = "";
     String prioridade = "";
 
-    public String getAreamãe() {
-        return areamãe;
+    public String getId() {
+        return id;
     }
 
-    public String getDescartado() {
-        return descartado;
+    public String getTitulo() {
+        return titulo;
     }
 
-    public String getNúmeronalista() {
-        return númeronalista;
+    public String getEndpoint() {
+        return endpoint;
     }
 
-    public String getNomenalista() {
-        return nomenalista;
+    public String getArea_mae_id() {
+        return area_mae_id;
     }
 
-    public String getAreascorelatas() {
-        return areascorelatas;
+    public String getArea_mae_nome() {
+        return area_mae_nome;
     }
 
-    public String getFontedosdados() {
-        return fontedosdados;
+    public String getCor() {
+        return cor;
     }
 
-    public String getNometabelapgadmin() {
-        return nometabelapgadmin;
+    public String getIcone() {
+        return icone;
     }
 
-    public String getNomeplanilhadrive() {
-        return nomeplanilhadrive;
+    public String getAreas_correlatas() {
+        return areas_correlatas;
     }
 
-    public String getTítulosugerido() {
-        return títulosugerido;
+    public String getSubtitulo() {
+        return subtitulo;
     }
 
-    public String getSubtítulo() {
-        return subtítulo;
+    public String getDescricao() {
+        return descricao;
     }
 
-    public String getDescrição() {
-        return descrição;
+    public String getFonte() {
+        return fonte;
     }
 
-    public String getObservação() {
-        return observação;
+    public String getObservacao() {
+        return observacao;
     }
 
-    public String getUrlparatableau() {
-        return urlparatableau;
-    }
-
-    public String getNomefinalparacaixa() {
-        return nomefinalparacaixa;
+    public String getUrl() {
+        return url;
     }
 
     public String getPrioridade() {

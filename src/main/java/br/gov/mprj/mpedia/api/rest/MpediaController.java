@@ -3,6 +3,7 @@ package br.gov.mprj.mpedia.api.rest;
 import br.gov.mprj.mpedia.api.persistence.mybatis.MpediaRepository;
 import br.gov.mprj.mpedia.domain.dao.AreasDAO;
 import br.gov.mprj.mpedia.domain.dao.TemasDAO;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -14,7 +15,8 @@ import java.util.List;
 @RequestMapping(value="/Mpedia")
 public class MpediaController {
 
-    @Resource(name = "mpediaRepository")
+    @Resource
+    @Qualifier(value = "MpediaRepository")
     private MpediaRepository mpediaRepository;
 
     @RequestMapping(value = "/areas", method = RequestMethod.GET)

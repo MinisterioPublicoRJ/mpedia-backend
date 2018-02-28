@@ -2,11 +2,52 @@
 <mapper namespace="br.gov.mprj.mpedia.api.persistence.mybatis.MpediaRepository">
 
     <select id="areas" resultType="br.gov.mprj.mpedia.domain.dao.AreasDAO" >
-        SELECT * FROM datapedia.areas
+        <![CDATA[
+          select *
+            from(
+                select a.id, a.nome, a.cor, a.icone, a.prioridade, count(*)-1 as count
+                from datapedia.temas t right join datapedia.areas a on t."areamãe" = a.nome
+                where descartado is null
+                group by a.id, a.nome, a.cor, a.icone, a.prioridade
+            ) a where count > 0
+        ]]>
     </select>
 
     <select id="temas" resultType="br.gov.mprj.mpedia.domain.dao.TemasDAO" >
-        SELECT * FROM datapedia.temas
+      <![CDATA[
+        select
+            t.id as id,
+            COALESCE(t."títulosugerido",t.nomenalista) as titulo,
+            REPLACE(COALESCE(t."títulosugerido",t.nomenalista),' ','') as endpoint,
+            a.id as area_mae_id,
+            t."areamãe" as area_mae_nome,
+            a.cor as cor,
+            a.icone as icone,
+            ac.areas_correlatas as areas_correlatas,
+            t."subtítulo" as subtitulo,
+            t."descrição" as descricao,
+            t.fontedosdados as fonte,
+            t."observação" as observacao,
+            t.urlparatableau as url,
+            t.prioridade as prioridade
+        from datapedia.temas t
+        join datapedia.areas a on t."areamãe" = a.nome
+        left join (
+            SELECT id_tema, array_accum(id_area::text) AS areas_correlatas
+            FROM (
+                select a.id as id_area, c.id as id_tema, *
+                from(
+                    SELECT REPLACE(s.token,',','') as area_correlata, t.id
+                    FROM datapedia.temas t, unnest(string_to_array(t.areascorelatas, ' ')) s(token)
+                ) c
+                join datapedia.areas a on c.area_correlata = a.nome
+            ) x
+            GROUP BY id_tema
+        ) ac on t.id = ac.id_tema
+        where t.descartado is null
+        or t.descartado != 'SIM'
+      ]]>
     </select>
+
 
 </mapper>
