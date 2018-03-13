@@ -38,7 +38,7 @@
                 select a.id as id_area, c.id as id_tema, *
                 from(
                     SELECT REPLACE(s.token,',','') as area_correlata, t.id
-                    FROM datapedia.temas t, unnest(string_to_array(t.areascorelatas, ' ')) s(token)
+                    FROM datapedia.temas t, unnest(string_to_array(t.areascorrelatas, ' ')) s(token)
                 ) c
                 join datapedia.areas a on c.area_correlata = a.nome
             ) x
