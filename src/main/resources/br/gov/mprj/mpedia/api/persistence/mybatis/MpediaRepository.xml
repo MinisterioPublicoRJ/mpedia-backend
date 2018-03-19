@@ -7,7 +7,7 @@
             from(
                 select a.id, a.nome, a.cor, a.icone, a.prioridade, count(*) as count
                 from datapedia.temas t right join datapedia.areas a on t."areamãe" = a.nome
-                where descartado is null
+                where descartado is null  or t.descartado != 'SIM'
                 group by a.id, a.nome, a.cor, a.icone, a.prioridade
             ) a where count > 0 order by a.prioridade desc
         ]]>

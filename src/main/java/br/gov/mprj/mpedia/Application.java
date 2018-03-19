@@ -26,7 +26,7 @@ import java.util.Locale;
 @EnableAutoConfiguration(exclude = {ErrorMvcAutoConfiguration.class, WebSocketAutoConfiguration.class, JmxAutoConfiguration.class})
 @MapperScan(basePackages = "br.gov.mprj.mpedia.api.persistence.mybatis")
 @ComponentScan(basePackages = {"br.gov.mprj.mpedia.api"})
-public class Application extends SpringBootServletInitializer  {
+public class Application extends SpringBootServletInitializer {
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);
     }

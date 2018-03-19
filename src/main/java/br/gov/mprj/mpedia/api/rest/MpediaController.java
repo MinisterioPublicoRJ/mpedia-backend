@@ -12,7 +12,7 @@ import javax.annotation.Resource;
 import java.util.List;
 
 @RestController
-@RequestMapping(value="/Mpedia")
+@RequestMapping(value="/")
 public class MpediaController {
 
     @Resource
