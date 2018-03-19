@@ -5,11 +5,11 @@
         <![CDATA[
           select *
             from(
-                select a.id, a.nome, a.cor, a.icone, a.prioridade, count(*)-1 as count
+                select a.id, a.nome, a.cor, a.icone, a.prioridade, count(*) as count
                 from datapedia.temas t right join datapedia.areas a on t."areamãe" = a.nome
                 where descartado is null
                 group by a.id, a.nome, a.cor, a.icone, a.prioridade
-            ) a where count > 0
+            ) a where count > 0 order by a.prioridade desc
         ]]>
     </select>
 
@@ -45,7 +45,7 @@
             GROUP BY id_tema
         ) ac on t.id = ac.id_tema
         where t.descartado is null
-        or t.descartado != 'SIM'
+        or t.descartado != 'SIM' order by t.prioridade desc
       ]]>
     </select>
 
