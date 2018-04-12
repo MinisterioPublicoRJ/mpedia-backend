@@ -4,6 +4,7 @@ package br.gov.mprj.mpedia.domain.dao;
 public class TemasDAO {
 
     String id = "";
+    String data_criacao = "";
     String titulo = "";
     String endpoint = "";
     String area_mae_id = "";
@@ -20,6 +21,10 @@ public class TemasDAO {
 
     public String getId() {
         return id;
+    }
+
+    public String getData_criacao() {
+        return data_criacao;
     }
 
     public String getTitulo() {
