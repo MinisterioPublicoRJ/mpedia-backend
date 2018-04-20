@@ -15,7 +15,7 @@
 
     <select id="temas" resultType="br.gov.mprj.mpedia.domain.dao.TemasDAO" >
       <![CDATA[
-   select
+        select
             t.id as id,
             t.data_criacao as data_criacao,
             COALESCE(t.titulo_sugerido,t.nome_na_lista) as titulo,
@@ -39,7 +39,7 @@
                 select a.id as id_area, c.id as id_tema, *
                 from(
                     SELECT REPLACE(s.token,',','') as area_correlata, t.id
-                    FROM datapedia.temas t, unnest(string_to_array(t.areas_correlatas, ' ')) s(token)
+                    FROM datapedia.temas t, unnest(string_to_array(t.areas_correlatas, ', ')) s(token)
                 ) c
                 join datapedia.areas a on c.area_correlata = a.nome
             ) x
