@@ -27,7 +27,6 @@ public class MpediaController {
     private ValidaJsonsService validaJsonsService;
 
     static List<AreasDAO> listaAreasDaoValidado = null;
-    static List<TemasDAO> listaTemasDaoValidado = null;
 
     @RequestMapping(value = "/areas", method = RequestMethod.GET)
     public HttpEntity<List<AreasDAO>> areas() {
@@ -39,9 +38,6 @@ public class MpediaController {
 
     @RequestMapping(value = "/temas", method = RequestMethod.GET)
     public HttpEntity<List<TemasDAO>> temas() {
-        List<TemasDAO> temas = mpediaRepository.temas();
-        if (validaJsonsService.validaTemas( temas)) listaTemasDaoValidado =  temas;
-        if (listaTemasDaoValidado == null) listaTemasDaoValidado = new ArrayList<>();
-        return new HttpEntity<>(listaTemasDaoValidado);
+        return new HttpEntity<>(validaJsonsService.validaTemas(mpediaRepository.temas()));
     }
 }
