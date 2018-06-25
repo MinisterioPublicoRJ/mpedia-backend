@@ -1,23 +1,22 @@
 package br.gov.mprj.mpedia.domain.dao;
 
-
 public class TemasDAO {
 
-    String id = "";
-    String data_criacao = "";
-    String titulo = "";
-    String endpoint = "";
-    String area_mae_id = "";
-    String area_mae_nome ="";
-    String cor = "";
-    String icone = "";
-    String areas_correlatas = "";
-    String subtitulo = "";
-    String descricao = "";
-    String fonte = "";
-    String observacao = "";
-    String url = "";
-    String prioridade = "";
+    private String id = "";
+    private String data_criacao = "";
+    private String titulo = "";
+    private String endpoint = "";
+    private String area_mae_id = "";
+    private String area_mae_nome = "";
+    private String cor = "";
+    private String icone = "";
+    private String areas_correlatas = "";
+    private String subtitulo = "";
+    private String descricao = "";
+    private String fonte = "";
+    private String observacao = "";
+    private String url = "";
+    private String prioridade = "";
 
     public String getId() {
         return id;
@@ -78,4 +77,5 @@ public class TemasDAO {
     public String getPrioridade() {
         return prioridade;
     }
+
 }

@@ -23,9 +23,10 @@ import javax.sql.DataSource;
 import java.util.Locale;
 
 @Configuration
-@EnableAutoConfiguration(exclude = {ErrorMvcAutoConfiguration.class, WebSocketAutoConfiguration.class, JmxAutoConfiguration.class})
+@EnableAutoConfiguration(exclude = { ErrorMvcAutoConfiguration.class, WebSocketAutoConfiguration.class,
+        JmxAutoConfiguration.class })
 @MapperScan(basePackages = "br.gov.mprj.mpedia.api.persistence.mybatis")
-@ComponentScan(basePackages = {"br.gov.mprj.mpedia.api"})
+@ComponentScan(basePackages = { "br.gov.mprj.mpedia.api" })
 public class Application extends SpringBootServletInitializer {
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);
@@ -33,6 +34,7 @@ public class Application extends SpringBootServletInitializer {
 
     @Override
     protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
+
         return application.sources(Application.class);
     }
 

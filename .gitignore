@@ -1,4 +1,9 @@
-/.idea
-/mpedia-backend.iml
-/src/main/resources/application.properties
+.idea/
 target/
+.settings/
+
+.project
+.classpath
+mpedia-backend.iml
+
+src/main/resources/application.properties

@@ -1,21 +1,37 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="br.gov.mprj.mpedia.api.persistence.mybatis.MpediaRepository">
 
+    <select id="views" resultType="br.gov.mprj.mpedia.domain.dao.TabelasDAO" >
+        SELECT i.table_name,c.relname,d.description,c.oid
+        FROM information_schema.tables i
+        LEFT JOIN pg_class c on relname = i.table_name
+        LEFT JOIN pg_description d on objoid = c.oid
+        WHERE table_schema = #{esquema}
+        --  and table_type = 'VIEW'
+    </select>
+
+    <select id="desc" resultType="br.gov.mprj.mpedia.domain.dao.TabelaDescDAO" >
+        SELECT *
+        FROM information_schema.columns
+        WHERE table_schema = #{esquema} and table_name = #{tablename};
+    </select>
+
     <select id="areas" resultType="br.gov.mprj.mpedia.domain.dao.AreasDAO" >
         <![CDATA[
-           select *
-            from(
+            SELECT *
+            FROM(
                 select a.id, a.nome, a.cor, a.icone, a.prioridade, count(*) as count
                 from datapedia.temas t inner join datapedia.areas a on t.area_mae = a.nome
                 where descartado is null or t.descartado != 'SIM'
                 group by a.id, a.nome, a.cor, a.icone, a.prioridade           
-                ) a order by a.prioridade, a.nome asc
+            ) a 
+            ORDER BY a.prioridade, a.nome asc
         ]]>
     </select>
 
     <select id="temas" resultType="br.gov.mprj.mpedia.domain.dao.TemasDAO" >
       <![CDATA[
-        select
+       select
             t.id as id,
             t.data_criacao as data_criacao,
             COALESCE(t.titulo_sugerido,t.nome_na_lista) as titulo,
@@ -49,6 +65,4 @@
         or t.descartado != 'SIM' order by t.prioridade, t.titulo_sugerido asc
       ]]>
     </select>
-
-
 </mapper>
