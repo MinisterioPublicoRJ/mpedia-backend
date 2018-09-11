@@ -18,14 +18,29 @@
 
     <select id="areas" resultType="br.gov.mprj.mpedia.domain.dao.AreasDAO" >
         <![CDATA[
-            SELECT *
-            FROM(
-                select a.id, a.nome, a.cor, a.icone, a.prioridade, count(*) as count
-                from datapedia.temas t inner join datapedia.areas a on t.area_mae = a.nome
-                where descartado is null or t.descartado != 'SIM'
-                group by a.id, a.nome, a.cor, a.icone, a.prioridade           
-            ) a 
-            ORDER BY a.prioridade, a.nome asc
+            select mp_data.id, mp_data.nome, mp_data.cor, mp_data.icone, mp_data.prioridade, count(*)
+            from (
+                select a.id, a.nome, a.cor, a.icone, a.prioridade, t.id as tema_id
+                from
+                    datapedia.areas a
+                    join datapedia.temas t on a.nome = t.area_mae
+                where
+                    t.descartado is null or t.descartado != 'SIM'
+                union
+                select a.id, a.nome, a.cor, a.icone, a.prioridade, t.id as tema_id
+                from
+                    datapedia.areas a
+                    join (
+                        select
+                            id, descartado,
+                            unnest(string_to_array(areas_correlatas, ', ')) as area_correlata
+                        from datapedia.temas
+                    ) t on a.nome = t.area_correlata
+                where
+                    t.descartado is null or t.descartado != 'SIM'
+            ) mp_data
+            group by mp_data.id, mp_data.nome, mp_data.cor, mp_data.icone, mp_data.prioridade
+            ORDER BY mp_data.prioridade, mp_data.nome asc
         ]]>
     </select>
 
