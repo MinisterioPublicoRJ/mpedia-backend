@@ -6,6 +6,7 @@ import br.gov.mprj.mpedia.domain.dao.AreasDAO;
 import br.gov.mprj.mpedia.domain.dao.TabelaDescDAO;
 import br.gov.mprj.mpedia.domain.dao.TabelasDAO;
 import br.gov.mprj.mpedia.domain.dao.TemasDAO;
+import br.gov.mprj.mpedia.domain.dto.AreasDTO;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -23,7 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/")
+@RequestMapping(value="/")
 public class MpediaController {
     @Autowired
     DataSource dataSource;
@@ -38,10 +39,10 @@ public class MpediaController {
         public static JSONArray convert(ResultSet rs) throws SQLException, JSONException {
             JSONArray json = new JSONArray();
             ResultSetMetaData rsmd = rs.getMetaData();
-            while (rs.next()) {
+            while(rs.next()) {
                 int numColumns = rsmd.getColumnCount();
                 JSONObject obj = new JSONObject();
-                for (int i = 1; i < numColumns + 1; i++) {
+                for (int i=1; i<numColumns+1; i++) {
                     obj.put(rsmd.getColumnName(i), rs.getObject(rsmd.getColumnName(i)));
                 }
                 json.put(obj);
@@ -52,47 +53,77 @@ public class MpediaController {
 
     @RequestMapping(value = "/views/{esquema}", method = RequestMethod.GET)
     public HttpEntity<List<TabelasDAO>> views(@PathVariable String esquema) {
-        String addr = "";
+        String addr="";
         InetAddress ip;
-        String port = "";
-        try {
-            addr = InetAddress.getLocalHost().getHostName();
-        } catch (Exception e) {
-        }
-        System.out.println(addr);
+        String port="";
+        //  try {
+        //  addr= InetAddress.getLocalHost().getHostName();
+        // }catch (Exception e){}
+        //  System.out.println(addr);
+        addr="apps.mprj.mp.br";
         List<TabelasDAO> lt = mpediaRepository.views(esquema);
-        for (TabelasDAO t : lt) {
-            List<TabelaDescDAO> lc = mpediaRepository.desc(esquema, t.nome());
+        for(TabelasDAO t:lt){
+            List<TabelaDescDAO> lc = mpediaRepository.desc(esquema,t.nome());
             t.colunas(lc);
-            t.link("http://" + addr + "/mpedia/api/dados/" + esquema + "/" + t.nome());
+            t.link("http://"+addr+"/mpedia/api/dados/"+esquema+"/"+t.nome());
         }
         return new HttpEntity<>(lt);
     }
 
     @RequestMapping(value = "/dados/{esquema}/{tabela}", method = RequestMethod.GET)
-    public HttpEntity<String> dados(@PathVariable String esquema, @PathVariable String tabela,
-            @RequestParam(required = false, defaultValue = "", value = "campo") String campo,
-            @RequestParam(required = false, defaultValue = "=", value = "oper") String oper,
-            @RequestParam(required = false, defaultValue = "", value = "valor") String valor) {
+    public HttpEntity<String> dados(@PathVariable String esquema,
+                                    @PathVariable String tabela,
+                                    @RequestParam(required = false, defaultValue = "", value="campo") String campo,
+                                    @RequestParam(required = false, defaultValue = "=", value="oper") String oper,
+                                    @RequestParam(required = false, defaultValue = "", value="valor") String valor){
         JSONArray jrst = new JSONArray();
         ResultSet rst;
-        String query = "";
-        if (!campo.equals("") && !valor.equals(""))
-            query = " where " + campo + " " + oper + " " + valor;
+        String query ="";
+        if( !campo.equals("") && !valor.equals(""))  query = " where "+ campo + " " + oper + " " + valor;
         try {
             Connection conn = dataSource.getConnection();
-            Statement stmt = conn.createStatement();
-            rst = stmt.executeQuery("Select * from " + esquema + "." + tabela + query);
+            Statement stmt=conn.createStatement();
+            rst=stmt.executeQuery("Select * from " + esquema +"."+ tabela + query);
             jrst = ResultSetConverter.convert(rst);
-        } catch (Exception e) {
+        }catch(Exception e){
             e.printStackTrace();
         }
         return new HttpEntity<>(jrst.toString());
     }
 
     @RequestMapping(value = "/areas", method = RequestMethod.GET)
-    public HttpEntity<List<AreasDAO>> areas() {
-        return new HttpEntity<>(validaJsonsService.validaAreas(mpediaRepository.areas()));
+    public HttpEntity<List<AreasDTO>> areas() {
+        List<AreasDTO> areas = generateAreasDTO(mpediaRepository.areas());
+        return new HttpEntity<>(validaJsonsService.validaAreas(areas));
+    }
+
+    private List<AreasDTO> generateAreasDTO(List<AreasDAO> areasDAO) {
+        List<AreasDTO> areasDTO = new ArrayList<>();
+        List<TemasDAO> temas = validaJsonsService.validaTemas(mpediaRepository.temas());
+
+        for (AreasDAO areaDAO: areasDAO){
+            AreasDTO areaDTO = new AreasDTO();
+            String area_id = areaDAO.getId();
+
+            areaDTO.setId(area_id);
+            areaDTO.setNome(areaDAO.getNome());
+            areaDTO.setCor(areaDAO.getCor());
+            areaDTO.setIcone(areaDAO.getIcone());
+            areaDTO.setPrioridade(areaDAO.getPrioridade());
+            areaDTO.setCount(countTemasArea(temas, area_id));
+
+            areasDTO.add(areaDTO);
+        }
+        return areasDTO;
+    }
+
+    private Integer countTemasArea(List<TemasDAO> temasValidos, String areaId) {
+        Integer count = 0;
+        for (TemasDAO tema : temasValidos){
+            if (tema.getArea_mae_id().equals(areaId))
+                count++;
+        }
+        return count;
     }
 
     @RequestMapping(value = "/temas", method = RequestMethod.GET)

@@ -3,7 +3,7 @@ package br.gov.mprj.mpedia.domain.dao;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class TabelaDescDAO {
-    @JsonProperty(value = "nome", index = -1)
+    @JsonProperty(value="nome",index = -1)
     String column_name = "";
     String data_type = "";
 

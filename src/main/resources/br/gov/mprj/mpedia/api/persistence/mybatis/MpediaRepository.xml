@@ -7,7 +7,7 @@
         LEFT JOIN pg_class c on relname = i.table_name
         LEFT JOIN pg_description d on objoid = c.oid
         WHERE table_schema = #{esquema}
-        --  and table_type = 'VIEW'
+      --  and table_type = 'VIEW'
     </select>
 
     <select id="desc" resultType="br.gov.mprj.mpedia.domain.dao.TabelaDescDAO" >
@@ -18,29 +18,13 @@
 
     <select id="areas" resultType="br.gov.mprj.mpedia.domain.dao.AreasDAO" >
         <![CDATA[
-            select mp_data.id, mp_data.nome, mp_data.cor, mp_data.icone, mp_data.prioridade, count(*)
-            from (
-                select a.id, a.nome, a.cor, a.icone, a.prioridade, t.id as tema_id
-                from
-                    datapedia.areas a
-                    join datapedia.temas t on a.nome = t.area_mae
-                where
-                    t.descartado is null or t.descartado != 'SIM'
-                union
-                select a.id, a.nome, a.cor, a.icone, a.prioridade, t.id as tema_id
-                from
-                    datapedia.areas a
-                    join (
-                        select
-                            id, descartado,
-                            unnest(string_to_array(areas_correlatas, ', ')) as area_correlata
-                        from datapedia.temas
-                    ) t on a.nome = t.area_correlata
-                where
-                    t.descartado is null or t.descartado != 'SIM'
-            ) mp_data
-            group by mp_data.id, mp_data.nome, mp_data.cor, mp_data.icone, mp_data.prioridade
-            ORDER BY mp_data.prioridade, mp_data.nome asc
+          select *
+            from(
+                select a.id, a.nome, a.cor, a.icone, a.prioridade, count(*) as count
+                from datapedia.temas t right join datapedia.areas a on t.area_mae = a.nome
+                where descartado is null  or t.descartado != 'SIM'
+                group by a.id, a.nome, a.cor, a.icone, a.prioridade
+            ) a where count > 0 order by a.prioridade desc
         ]]>
     </select>
 
@@ -70,7 +54,7 @@
                 select a.id as id_area, c.id as id_tema, *
                 from(
                     SELECT REPLACE(s.token,',','') as area_correlata, t.id
-                    FROM datapedia.temas t, unnest(string_to_array(t.areas_correlatas, ', ')) s(token)
+                    FROM datapedia.temas t, unnest(string_to_array(t.areas_correlatas, ' ')) s(token)
                 ) c
                 join datapedia.areas a on c.area_correlata = a.nome
             ) x
@@ -78,6 +62,43 @@
         ) ac on t.id = ac.id_tema
         where t.descartado is null
         or t.descartado != 'SIM' order by t.prioridade, t.titulo_sugerido asc
+      ]]>
+    </select>
+
+    <select id="temasArea" resultType="br.gov.mprj.mpedia.domain.dao.TemasDAO" >
+      <![CDATA[
+       select
+            t.id as id,
+            t.data_criacao as data_criacao,
+            COALESCE(t.titulo_sugerido,t.nome_na_lista) as titulo,
+            REPLACE(COALESCE(t.titulo_sugerido,t.nome_na_lista),' ','') as endpoint,
+            a.id as area_mae_id,
+            t.area_mae as area_mae_nome,
+            a.cor as cor,
+            a.icone as icone,
+            ac.areas_correlatas as areas_correlatas,
+            t.subtitulo as subtitulo,
+            t.descricao as descricao,
+            t.fonte_dos_dados as fonte,
+            t.observacao as observacao,
+            t.url_para_tableau as url,
+            t.prioridade as prioridade
+        from datapedia.temas t
+        join datapedia.areas a on t.area_mae = a.nome
+        left join (
+            SELECT id_tema, array_accum(id_area::text) AS areas_correlatas
+            FROM (
+                select a.id as id_area, c.id as id_tema, *
+                from(
+                    SELECT REPLACE(s.token,',','') as area_correlata, t.id
+                    FROM datapedia.temas t, unnest(string_to_array(t.areas_correlatas, ' ')) s(token)
+                ) c
+                join datapedia.areas a on c.area_correlata = a.nome
+            ) x
+            GROUP BY id_tema
+        ) ac on t.id = ac.id_tema
+        where (t.descartado is null or t.descartado != 'SIM')
+        and t.area_mae = #{area}
       ]]>
     </select>
 </mapper>

@@ -6,4 +6,4 @@ target/
 .classpath
 mpedia-backend.iml
 
-src/main/resources/application.properties
+application.properties

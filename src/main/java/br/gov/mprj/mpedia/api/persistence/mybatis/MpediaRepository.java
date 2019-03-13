@@ -10,10 +10,8 @@ import java.util.List;
 
 public interface MpediaRepository {
     List<TabelasDAO> views(@Param("esquema") String esquema);
-
     List<TabelaDescDAO> desc(@Param("esquema") String esquema, @Param("tablename") String tablename);
-
     List<AreasDAO> areas();
-
     List<TemasDAO> temas();
+    List<TemasDAO> temasArea(String area);
 }

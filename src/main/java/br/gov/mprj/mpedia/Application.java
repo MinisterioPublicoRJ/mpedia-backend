@@ -1,5 +1,6 @@
 package br.gov.mprj.mpedia;
 
+import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.annotation.MapperScan;
@@ -23,10 +24,9 @@ import javax.sql.DataSource;
 import java.util.Locale;
 
 @Configuration
-@EnableAutoConfiguration(exclude = { ErrorMvcAutoConfiguration.class, WebSocketAutoConfiguration.class,
-        JmxAutoConfiguration.class })
+@EnableAutoConfiguration(exclude = {ErrorMvcAutoConfiguration.class, WebSocketAutoConfiguration.class, JmxAutoConfiguration.class})
 @MapperScan(basePackages = "br.gov.mprj.mpedia.api.persistence.mybatis")
-@ComponentScan(basePackages = { "br.gov.mprj.mpedia.api" })
+@ComponentScan(basePackages = {"br.gov.mprj.mpedia.api"})
 public class Application extends SpringBootServletInitializer {
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);
