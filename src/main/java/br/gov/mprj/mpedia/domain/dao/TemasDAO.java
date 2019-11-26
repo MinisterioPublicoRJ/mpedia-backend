@@ -17,6 +17,7 @@ public class TemasDAO {
     private String observacao = "";
     private String url = "";
     private String prioridade = "";
+    private String tabela = "";
 
     public String getId() { return id; }
     public String getData_criacao() { return data_criacao; }
@@ -58,6 +59,9 @@ public class TemasDAO {
     }
     public String getPrioridade() {
         return prioridade;
+    }
+    public String getTabela() {
+        return tabela;
     }
 
 }

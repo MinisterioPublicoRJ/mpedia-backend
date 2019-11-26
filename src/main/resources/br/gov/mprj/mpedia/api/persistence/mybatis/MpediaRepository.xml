@@ -45,7 +45,8 @@
             t.fonte_dos_dados as fonte,
             t.observacao as observacao,
             t.url_para_tableau as url,
-            t.prioridade as prioridade
+            t.prioridade as prioridade,
+            t.nome_tabela_pgadmin as tabela
         from datapedia.temas t
         join datapedia.areas a on t.area_mae = a.nome
         left join (
